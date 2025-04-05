@@ -45,7 +45,7 @@ class ApiAnaGov:
         path = '/EstacoesTelemetricas/HidroInventarioEstacoes/v1'
         token = self.get_token()
         print(f"Inicializando busca de Estacoes")
-        response = requests.get(url = self.url + path, headers={'Código da Bacia': '1', 'Authorization': 'Bearer '+token})
+        response = requests.get(url = self.url + path, headers={'Unidade Federativa': 'AM', 'Authorization': 'Bearer '+token})
         response=response.json()
         print(response)
         print(f"Busca de Estacoes finalizada!\n")
@@ -59,6 +59,16 @@ class ApiAnaGov:
                 estacoes_amazonia.append(estacao)
         print(f"Filtragem de Estacoes concluída!\n")
         return estacoes_amazonia
+
+    def df_estacoes_codigo(self):
+        path = '/EstacoesTelemetricas/HidroInventarioEstacoes/v1'
+        token = self.get_token()
+        print(f"Inicializando busca de Estacoes")
+        response = requests.get(url = self.url + path, headers={'Código da Bacia': '1', 'Authorization': 'Bearer '+token})
+        response=response.json()
+        print(response)
+        print(f"Busca de Estacoes finalizada!\n")
+        return response['items']
 
 
 if __name__ == "__main__":
