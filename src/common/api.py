@@ -6,9 +6,25 @@ class ApiAnaGov:
         self.url = 'https://www.ana.gov.br/hidrowebservice'
 
     def main(self):
-        lista_estacoes = self.busca_estacoes()
-        estacoes_amazonia = self.filtra_estacoes(lista_estacoes)
-        print(estacoes_amazonia)
+        print("\nMODELO-PREVISAO-ENCHENTES : Iniciando resgaste dos dados!\n")
+
+        # Resgatando token de autenticação
+        token = self.get_token()
+
+        # Definindo municipios que serão estudados
+        lista_municipios = ['AM', 'AP', 'AC', 'MA', 'MT', 'PA', 'RO', 'RR', 'TO']
+
+        # Buscando código das estações por município
+        estacoes_por_municipio = dict()
+        estacoes_por_municipio[lista_municipios[0]] = self.busca_estacoes_integerers(municipio=lista_municipios[0],token=token)
+        for municipio in lista_municipios[1:]:
+            estacoes_por_municipio[municipio] = self.busca_estacoes_integerers(municipio=municipio,token=token)
+        print(estacoes_por_municipio)
+
+        # Formatação dos códigos de estação por município
+        codigos_das_estacoes = self.filtra_estacoes_pluviometricas(estacoes_por_municipio,lista_municipios)
+        print(codigos_das_estacoes)
+
         return
 
     def get_token(self):
@@ -22,56 +38,30 @@ class ApiAnaGov:
         print(f"Token de autenticacao gerado!\n")
         return response['items']['tokenautenticacao']
 
-    def busca_estacoes(self):
-        path = '/EstacoesTelemetricas/HidrosatInventarioEstacoes/v1'
-        token = self.get_token()
-        print(f"Inicializando busca de Estacoes")
-        response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token})
-        response=response.json()
-        print(f"Busca de Estacoes finalizada!\n")
-        return response['items']
-
-    def filtra_estacoes(self, lista_estacoes):
-        print(f"Inicializando filtragem de Estacoes")
-        lista_municipios = ['AC', 'AP', 'AM', 'MA', 'MT', 'PA', 'RO', 'RR', 'TO']
-        estacoes_amazonia = []
-        for el in lista_estacoes:
-            if el['UF'] in lista_municipios:
-                estacoes_amazonia.append(el)
-        print(f"Filtragem de Estacoes concluída!\n")
-        return estacoes_amazonia
-
-    def busca_estacoes_integerers(self):
+    def busca_estacoes_integerers(self, municipio: str, token : str):
         path = '/EstacoesTelemetricas/HidroInventarioEstacoes/v1'
-        token = self.get_token()
         print(f"Inicializando busca de Estacoes")
-        response = requests.get(url = self.url + path, headers={'Unidade Federativa': 'AM', 'Authorization': 'Bearer '+token})
+        response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token}, params={'Unidade Federativa': municipio})
         response=response.json()
         print(response)
         print(f"Busca de Estacoes finalizada!\n")
-        return response['items']
+        return response
 
-    def get_vazoes(self,estacoes_amazonia):
-        print(f"Inicializando busca de vazões por Estacoes")
+    def filtra_estacoes_pluviometricas(self,dict_estacoes,lista_municipios):
+        print(f"Inicializando formatação de código de Estacoes por município")
 
-        for estacao in estacoes_amazonia:
-            if estacao['codigoestacao'] in estacoes_amazonia:
-                estacoes_amazonia.append(estacao)
-        print(f"Filtragem de Estacoes concluída!\n")
-        return estacoes_amazonia
+        estacoes_pluviometricas = dict()
+        for municipio in lista_municipios:
+            estacoes_pluviometricas[municipio] = []
+            for el in dict_estacoes[municipio]['items']:
+                if el['Tipo_Estacao_Pluviometro'] == '1':
+                    estacoes_pluviometricas[municipio].append(el['codigoestacao'])
+        print(estacoes_pluviometricas)
 
-    def df_estacoes_codigo(self):
-        path = '/EstacoesTelemetricas/HidroInventarioEstacoes/v1'
-        token = self.get_token()
-        print(f"Inicializando busca de Estacoes")
-        response = requests.get(url = self.url + path, headers={'Código da Bacia': '1', 'Authorization': 'Bearer '+token})
-        response=response.json()
-        print(response)
-        print(f"Busca de Estacoes finalizada!\n")
-        return response['items']
+        print(f"Formatação de códigos de Estacoes concluída!\n")
+        return estacoes_pluviometricas
 
 
 if __name__ == "__main__":
     classe = ApiAnaGov()
     classe.main()
-    classe.busca_estacoes_integerers()
