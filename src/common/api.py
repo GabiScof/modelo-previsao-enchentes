@@ -1,6 +1,4 @@
 import requests
-from pandas.core.interchange.dataframe_protocol import DataFrame
-
 from env import Env
 import pandas as pd
 
@@ -51,7 +49,8 @@ class ApiAnaGov:
 
     def get_token(self):
         """
-        É necessário preencher o Identificador e Senha no arquivo env.py
+        Resgata token de Autenticação.
+        --> É necessário preencher o Identificador e Senha no arquivo env.py
         """
         print(f"Inicializando resgate do token de autenticacao")
         path = '/EstacoesTelemetricas/OAUth/v1'
@@ -127,7 +126,7 @@ class ApiAnaGov:
             codigos = dict_estacoes[municipio]
             for codigo in codigos:
                 print(f"Buscando dados para a estação {codigo}")
-                for ano in range(2024, 2023, -1): #TODO Alterar 2023 para 1990
+                for ano in range(2024, 1990, -1):
                     print(f"Buscando para o ano {ano}")
 
                     # Primeira metade do ano
@@ -167,7 +166,7 @@ class ApiAnaGov:
             codigos = dict_estacoes[municipio]
             for codigo in codigos:
                 print(f"Buscando dados para a estação {codigo}")
-                for ano in range(2024, 2023, -1): #TODO Alterar 2023 para 1990
+                for ano in range(2024, 1990, -1):
                     print(f"Buscando para o ano {ano}")
 
                     # Primeira metade do ano
@@ -223,8 +222,8 @@ class ApiAnaGov:
 
     def transformar_vazao(self, df: pd.DataFrame):
         """
-        Formatação do dataframe de pluviometria dado uma estação e uma data.
-        Queremos transformar cada coluna de vazao por dia, em uma linha definida por sua data.
+        Formatação do dataframe de vazão dado uma estação e uma data.
+        Queremos transformar cada coluna de vazão por dia, em uma linha definida por sua data.
         """
         print(f"Inicializando formatação do df de vazão")
 
