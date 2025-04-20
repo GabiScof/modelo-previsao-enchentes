@@ -76,6 +76,42 @@ Gera um arquivo .csv separado para cada estado, salvo na pasta `data/` com o nom
 No final, assim como a `main.py`, ele também gera um arquivo final com todos os dados pluviométricos, por dia e mês, de cada estação de cada estado na pasta `data/`: `dados-pluviometricos-final.csv`.
  <br> <br>
 
+## Diferença entre funções de coleta de chuva
+Este projeto possui duas funções principais para coletar dados pluviométricos:
+<br><br>
+📌 **`busca_chuva_por_estacao_e_uf`**
+
+Coleta os dados de todas as estações de uma UF automaticamente.
+
+✅ Utilizado na main_uf.py.
+
+```python
+df_am = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos, token=token, uf='AM')
+```
+<br>
+
+📌 **`busca_chuva_por_estacao`**
+
+Coleta os dados de todas as estações de todas as UFs listadas.
+
+✅ Utilizado na main.py.
+```python
+lista_municipios = ['AM', 'AP', 'AC', 'MA', 'MT', 'PA', 'RO', 'RR', 'TO']
+df_pluviometria = api.busca_chuva_por_estacao(dict_estacoes=codigos_estacoes_pluviometricas,token=token, lista_municipios=lista_municipios)
+```
+ <br> <br>
+
+## Intervalo de Coleta de Dados
+
+Este projeto está configurado para buscar dados de **1990 até 2024** por padrão.
+
+Caso deseje alterar esse intervalo para reduzir o tempo de execução ou focar em anos específicos, você pode editar os parâmetros de data nas funções de coleta localizadas no arquivo `api.py`:
+```python
+for ano in range(2024, 1990, -1):
+```
+Esse intervalo pode ser alterado para as funções de coleta: `busca_chuva_por_estacao_e_uf`, `busca_chuva_por_estacao`, `busca_vazao_por_estacao`, `busca_vazao_por_estacao_e_uf`
+ <br> <br>
+
 
 ## Exemplo de uso
 
