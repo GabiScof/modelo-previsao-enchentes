@@ -28,38 +28,30 @@ def main():
     df_estacoes_pluviometricas.to_csv('data/estacao-pluviometrica-municipio.csv', index=False)
 
     # Busca dados de pluviometria por estado individualmente
-    df_pluviometria_am = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='AM')
-    df_pluviometria_am.to_csv('data/dados-pluviometricos-AM.csv', index=False)
-
-    # Busca dados de pluviometria por estação
     df_pluviometria_ap = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='AP')
     df_pluviometria_ap.to_csv('data/dados-pluviometricos-AP.csv', index=False)
 
-    # Busca dados de pluviometria por estação
     df_pluviometria_ac = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='AC')
     df_pluviometria_ac.to_csv('data/dados-pluviometricos-AC.csv', index=False)
 
-    # Busca dados de pluviometria por estação
+    df_pluviometria_rr = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas, token=token,uf='RR')
+    df_pluviometria_rr.to_csv('data/dados-pluviometricos-RR.csv', index=False)
+
+    df_pluviometria_ro = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas, token=token,uf='RO')
+    df_pluviometria_ro.to_csv('data/dados-pluviometricos-RO.csv', index=False)
+
     df_pluviometria_ma = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='MA')
     df_pluviometria_ma.to_csv('data/dados-pluviometricos-MA.csv', index=False)
 
-    # Busca dados de pluviometria por estação
     df_pluviometria_mt = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='MT')
     df_pluviometria_mt.to_csv('data/dados-pluviometricos-MT.csv', index=False)
 
-    # Busca dados de pluviometria por estação
+    df_pluviometria_am = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='AM')
+    df_pluviometria_am.to_csv('data/dados-pluviometricos-AM.csv', index=False)
+
     df_pluviometria_pa = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='PA')
     df_pluviometria_pa.to_csv('data/dados-pluviometricos-PA.csv', index=False)
 
-    # Busca dados de pluviometria por estação
-    df_pluviometria_ro = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='RO')
-    df_pluviometria_ro.to_csv('data/dados-pluviometricos-RO.csv', index=False)
-
-    # Busca dados de pluviometria por estação
-    df_pluviometria_rr = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='RR')
-    df_pluviometria_rr.to_csv('data/dados-pluviometricos-RR.csv', index=False)
-
-    # Busca dados de pluviometria por estação
     df_pluviometria_to = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_pluviometricas,token=token, uf='TO')
     df_pluviometria_to.to_csv('data/dados-pluviometricos-TO.csv', index=False)
 
