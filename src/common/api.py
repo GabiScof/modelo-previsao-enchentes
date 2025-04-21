@@ -186,6 +186,9 @@ class ApiAnaGov:
 
                     # Primeira metade do ano
                     response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token}, params={'Tipo Filtro Data': 'DATA_LEITURA', 'Data Inicial (yyyy-MM-dd)': f"{ano}-01-01", 'Data Final (yyyy-MM-dd)': f"{ano}-12-01", 'Código da Estação':int(codigo)})
+                    while response.status_code != 200:
+                        token = self.get_token()
+                        response = requests.get(url=self.url + path, headers={'Authorization': 'Bearer ' + token},params={'Tipo Filtro Data': 'DATA_LEITURA','Data Inicial (yyyy-MM-dd)': f"{ano}-01-01",'Data Final (yyyy-MM-dd)': f"{ano}-12-01",'Código da Estação': int(codigo)})
                     response = response.json()
                     if response['message'] == "Não houve retorno de registros. Verifique!":
                         print("\nNão houve registros a partir desse ano.\nPassando para o próximo código de estação.\n")
@@ -195,6 +198,47 @@ class ApiAnaGov:
                     df_vazoes = pd.concat([df_vazoes, df_vazoes_por_ano], ignore_index=True)
 
                     df_vazoes = self.transformar_vazao(df_vazoes)
+
+        print(df_vazoes)
+
+        print(f"Formatação de códigos de Estacoes concluída!\n")
+        return df_vazoes
+
+
+    def busca_vazao_por_estacao_e_uf(self,dict_estacoes : dict ,token : str, uf: str):
+        """
+        A busca de pluviometria é feita por cada metade do ano, pois a requisião só aceita buscas de um intervalo de no máximo de 6 meses.
+        """
+        print(f"Inicializando busca pluviometria por Estacoes")
+
+        path = '/EstacoesTelemetricas/HidroSerieVazao/v1'
+
+        df_vazoes = pd.DataFrame()
+        codigos = dict_estacoes[uf]
+        tam = len(codigos)
+        i = 1
+        for codigo in codigos:
+            print(f"({i}/{tam})")
+            i+=1
+            print(f"Buscando dados para a estação {codigo}")
+            for ano in range(2024, 1990, -1):
+                print(f"Buscando para o ano {ano}")
+
+                # Primeira metade do ano
+                response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token}, params={'Tipo Filtro Data': 'DATA_LEITURA', 'Data Inicial (yyyy-MM-dd)': f"{ano}-01-01", 'Data Final (yyyy-MM-dd)': f"{ano}-12-01", 'Código da Estação':int(codigo)})
+                while response.status_code != 200:
+                    token = self.get_token()
+                    response = requests.get(url=self.url + path, headers={'Authorization': 'Bearer ' + token},params={'Tipo Filtro Data': 'DATA_LEITURA','Data Inicial (yyyy-MM-dd)': f"{ano}-01-01",'Data Final (yyyy-MM-dd)': f"{ano}-12-01", 'Código da Estação': int(codigo)})
+
+                response = response.json()
+                if response['message'] == "Não houve retorno de registros. Verifique!":
+                    print("\nNão houve registros a partir desse ano.\nPassando para o próximo código de estação.\n")
+                    break
+
+                df_vazoes_por_ano = pd.DataFrame(response["items"])
+                df_vazoes = pd.concat([df_vazoes, df_vazoes_por_ano], ignore_index=True)
+
+                df_vazoes = self.transformar_vazao(df_vazoes)
 
         print(df_vazoes)
 

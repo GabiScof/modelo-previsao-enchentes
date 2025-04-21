@@ -59,14 +59,41 @@ def main():
     df_pluviometria_final.to_csv('data/dados-pluviometricos-final.csv', index=False)
 
     # Formatação dos códigos de estação de vazão por município
-    #codigos_estacoes_de_vazao, df_estacoes_vazao = api.filtra_estacoes_de_vazao(estacoes_por_municipio,lista_municipios)
+    codigos_estacoes_de_vazao, df_estacoes_vazao = api.filtra_estacoes_de_vazao(estacoes_por_municipio,lista_municipios)
 
     # Gera df associando a estação de vazão ao municipio
-    #df_estacoes_vazao.to_csv('estacao-vazao-municipio.csv', index=False)
+    df_estacoes_vazao.to_csv('estacao-vazao-municipio.csv', index=False)
 
     # Busca dados de vazão por estação
-    #df_vazao = api.busca_vazao_por_estacao(dict_estacoes=codigos_estacoes_de_vazao,token=token, lista_municipios=lista_municipios)
-    #df_vazao.to_csv('dados-vazao.csv', index=False)
+    df_vazao_ap = api.busca_vazao_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='AP')
+    df_vazao_ap.to_csv('data/dados-vazao-AP.csv', index=False)
+
+    df_vazao_ac = api.busca_vazao_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='AC')
+    df_vazao_ac.to_csv('data/dados-vazao-AC.csv', index=False)
+
+    df_vazao_rr = api.busca_vazao_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao, token=token,uf='RR')
+    df_vazao_rr.to_csv('data/dados-vazao-RR.csv', index=False)
+
+    df_vazao_ro = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao, token=token,uf='RO')
+    df_vazao_ro.to_csv('data/dados-vazao-RO.csv', index=False)
+
+    df_vazao_ma = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='MA')
+    df_vazao_ma.to_csv('data/dados-vazao-MA.csv', index=False)
+
+    df_vazao_mt = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='MT')
+    df_vazao_mt.to_csv('data/dados-vazao-MT.csv', index=False)
+
+    df_vazao_am = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='AM')
+    df_vazao_am.to_csv('data/dados-vazao-AM.csv', index=False)
+
+    df_vazao_pa = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='PA')
+    df_vazao_pa.to_csv('data/dados-vazao-PA.csv', index=False)
+
+    df_vazao_to = api.busca_chuva_por_estacao_e_uf(dict_estacoes=codigos_estacoes_de_vazao,token=token, uf='TO')
+    df_vazao_to.to_csv('data/dados-vazao-TO.csv', index=False)
+
+    df_vazao_final = pd.concat([df_vazao_am,df_vazao_ma,df_vazao_mt,df_vazao_pa,df_vazao_ro,df_vazao_rr,df_vazao_to])
+    df_vazao_final.to_csv('data/dados-vazao-final.csv', index=False)
 
     return
 
