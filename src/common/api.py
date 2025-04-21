@@ -15,6 +15,8 @@ class ApiAnaGov:
         print(f"Inicializando resgate do token de autenticacao")
         path = '/EstacoesTelemetricas/OAUth/v1'
         response = requests.get(url = self.url + path, headers={'Identificador': Env.ID, 'Senha': Env.SENHA})
+        while response.status_code != 200:
+            response = requests.get(url=self.url + path, headers={'Identificador': Env.ID, 'Senha': Env.SENHA})
         response = response.json()
         print(f"Token de autenticacao gerado!\n")
         return response['items']['tokenautenticacao']
@@ -138,7 +140,7 @@ class ApiAnaGov:
 
                 # Primeira metade do ano
                 response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token}, params={'Tipo Filtro Data': 'DATA_LEITURA', 'Data Inicial (yyyy-MM-dd)': f"{ano}-01-01", 'Data Final (yyyy-MM-dd)': f"{ano}-06-01", 'Código da Estação':int(codigo)})
-                if response.status_code == 401:
+                while response.status_code != 200:
                     token = self.get_token()
                     response = requests.get(url=self.url + path, headers={'Authorization': 'Bearer ' + token},params={'Tipo Filtro Data': 'DATA_LEITURA','Data Inicial (yyyy-MM-dd)': f"{ano}-01-01",'Data Final (yyyy-MM-dd)': f"{ano}-06-01",'Código da Estação': int(codigo)})
                 response = response.json()
@@ -152,7 +154,7 @@ class ApiAnaGov:
 
                 # Segunda metade do ano
                 response = requests.get(url = self.url + path, headers={'Authorization': 'Bearer '+token}, params={'Tipo Filtro Data': 'DATA_LEITURA', 'Data Inicial (yyyy-MM-dd)': f"{ano}-07-01", 'Data Final (yyyy-MM-dd)': f"{ano}-12-01", 'Código da Estação':int(codigo)})
-                if response.status_code == 401:
+                while response.status_code != 200:
                     token = self.get_token()
                     response = requests.get(url=self.url + path, headers={'Authorization': 'Bearer ' + token},params={'Tipo Filtro Data': 'DATA_LEITURA','Data Inicial (yyyy-MM-dd)': f"{ano}-01-01",'Data Final (yyyy-MM-dd)': f"{ano}-06-01",'Código da Estação': int(codigo)})
                 response = response.json()
