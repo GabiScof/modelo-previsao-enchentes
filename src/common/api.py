@@ -170,7 +170,7 @@ class ApiAnaGov:
         """
         A busca de pluviometria é feita por cada metade do ano, pois a requisião só aceita buscas de um intervalo de no máximo de 6 meses.
         """
-        print(f"Inicializando busca pluviometria por Estacoes")
+        print(f"Inicializando busca de dados de vazão por Estacoes")
 
         path = '/EstacoesTelemetricas/HidroSerieVazao/v1'
 
@@ -195,13 +195,11 @@ class ApiAnaGov:
                         break
 
                     df_vazoes_por_ano = pd.DataFrame(response["items"])
+                    df_vazoes_por_ano = self.transformar_vazao(df_vazoes_por_ano)
                     df_vazoes = pd.concat([df_vazoes, df_vazoes_por_ano], ignore_index=True)
 
-                    df_vazoes = self.transformar_vazao(df_vazoes)
 
-        print(df_vazoes)
-
-        print(f"Formatação de códigos de Estacoes concluída!\n")
+        print(f"Busca de dados de vazão concluída!\n")
         return df_vazoes
 
 
@@ -209,7 +207,7 @@ class ApiAnaGov:
         """
         A busca de pluviometria é feita por cada metade do ano, pois a requisião só aceita buscas de um intervalo de no máximo de 6 meses.
         """
-        print(f"Inicializando busca pluviometria por Estacoes")
+        print(f"Inicializando busca de dados de vazão por estacoes para o estado: {uf}")
 
         path = '/EstacoesTelemetricas/HidroSerieVazao/v1'
 
@@ -236,13 +234,10 @@ class ApiAnaGov:
                     break
 
                 df_vazoes_por_ano = pd.DataFrame(response["items"])
+                df_vazoes_por_ano = self.transformar_vazao(df_vazoes_por_ano)
                 df_vazoes = pd.concat([df_vazoes, df_vazoes_por_ano], ignore_index=True)
 
-                df_vazoes = self.transformar_vazao(df_vazoes)
-
-        print(df_vazoes)
-
-        print(f"Formatação de códigos de Estacoes concluída!\n")
+        print(f"Busca de dados de vazão para a uf {uf} concluída!\n")
         return df_vazoes
 
     def transformar_chuva(self, df: pd.DataFrame):
@@ -286,12 +281,12 @@ class ApiAnaGov:
             mes = data_base.month
 
             for dia in range(1, 32):
-                chuva_coluna = f'Vazao_{str(dia).zfill(2)}'
+                vazao_coluna = f'Vazao_{str(dia).zfill(2)}'
                 try:
                     nova_data = data_base.replace(year=ano, month=mes, day=dia)
                     nova_linha = {
                         'data': nova_data,
-                        'vazao': row[chuva_coluna],
+                        'vazao': row[vazao_coluna],
                         'estacao': row['codigoestacao']
                     }
                     novas_linhas.append(nova_linha)
